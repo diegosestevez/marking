@@ -7,6 +7,8 @@ COPY package*.json ./
 
 ENV DATA_IP=database
 
+ENV DB_LOCAL='mongodb://database:27017/DB'
+
 RUN npm install
 
 COPY . .

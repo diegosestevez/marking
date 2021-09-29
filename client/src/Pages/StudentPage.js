@@ -22,6 +22,11 @@ const StudentPage = () => {
     useEffect(()=>{
         const token = localStorage.getItem('local_auth')
         const tokenString = JSON.parse(token);
+
+        //patches react error when accessing /student route without token
+        if(tokenString === null){
+            return history.push('/');
+        }
        
         validateSession(token, tokenString);
         fetchStudentData(tokenString.userId)
