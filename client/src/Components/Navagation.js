@@ -1,11 +1,18 @@
-import React from 'react'
+import {AppBar, Typography} from '@material-ui/core';
+// import BeenhereIcon from '@material-ui/icons/Beenhere';
+import useStyles from './styles/styles';
 
-const Navagation = () => {
+const Navbar = () => {
+  const classes = useStyles();
+
     return (
-        <div>
-            Navbar
-        </div>
+     <AppBar position="static" className={classes.navbar}>
+       {/* <BeenhereIcon style={{fontSize:'50'}}/> */}
+        <Typography variant="h3">
+           Marking App
+        </Typography>
+      </AppBar>
     )
 }
 
-export default Navagation
+export default Navbar
