@@ -2,9 +2,6 @@ require('dotenv').config({path:__dirname + '/../.env'});
 const mongoose = require('mongoose');
 const app = require('./middleware');
 
-//docker env
-// const DockerString = 'mongodb://database:27017/DB'
-//const DevString = 'mongodb://localhost:27017/DB'
 
 //MongoDB connection
 mongoose.connect(process.env.DB_LOCAL, {useNewUrlParser: true, useUnifiedTopology: true})

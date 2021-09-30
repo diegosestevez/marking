@@ -10,7 +10,10 @@ const Marking = ({handleMarks, assignment, updateMarks}) => {
             <form onSubmit={handleMarks} id={assignment._id}>
                 <Typography variant="h5" gutterBottom>{assignment.name}</Typography>
                 <FormLabel>{assignment.title}</FormLabel>
-                <Typography variant="body1" gutterBottom>Student Answer: {assignment.answer}</Typography>
+                {assignment.type === 'MS'
+                    ? <Typography variant="body1" gutterBottom>Student Answer:  {assignment.answer.toString().replaceAll(",", ", ")}</Typography>
+                    : <Typography variant="body1" gutterBottom>Student Answer: {assignment.answer}</Typography>
+                }
                 <TextField
                     required
                     type="number"
