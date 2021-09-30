@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
+import questionPayload from '../Utils/questionPayload';
 import Assignment1 from '../Components/Assignment1';
 import Assignment2 from '../Components/Assignment2';
 import Assignment3 from '../Components/Assignment3';
@@ -13,26 +14,24 @@ const StudentPage = () => {
     const history = useHistory()
 
     const [questions, setQuestions] = useState([]);
-    
     const [multipleChoice, setMultipleChoice] = useState(null);
     const [multiSelect, setMultSelect] = useState([]);
     const [fillInBlank, setFillInBlank] = useState('');
- 
+
+    const token = localStorage.getItem('local_auth')
+    const tokenString = JSON.parse(token);
     
     useEffect(()=>{
-        const token = localStorage.getItem('local_auth')
-        const tokenString = JSON.parse(token);
-
         //patches react error when accessing /student route without token
         if(tokenString === null){
             return history.push('/');
         }
-       
+    
         validateSession(token, tokenString);
         fetchStudentData(tokenString.userId)
     },[])
 
-    
+   
     //Validates localstorage session//
     const validateSession = (token, tokenString) => {
         if(token === null || tokenString.userType === 'Instructor' ){
@@ -71,97 +70,21 @@ const StudentPage = () => {
 
     
     // Assignment handler functions //
-    function handleMultipleChoice(e){
-        alert("Assignment was submitted!")
-        e.preventDefault();
-
-        const token = localStorage.getItem('local_auth')
-        const tokenString = JSON.parse(token)
+    const handleMultipleChoice = (e) => {
         const studentId = tokenString.userId;
+        questionPayload(e, studentId, multipleChoice, 'MC');
+    }
 
-        (() => {
-            document.getElementById('assign1').style.display = 'none';
-        })()
-        
-        
-        const payload = {
-            answer:multipleChoice,
-            submitted: true,
-            user_id: studentId,
-            type:'MC'
-        }
-
-        const requestOptions =({
-            method:'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body:JSON.stringify(payload)
-        })
-    
-        fetch('http://localhost:8000/assign/submit', requestOptions)
-        .catch(err => console.log(err))    
+    const handleMultiSelect = (e) => {
+        const studentId = tokenString.userId;
+        questionPayload(e, studentId, multiSelect, 'MS');
     }
 
 
-    function handleMultiSelect(e){
-        alert("Assignment was submitted!")
-        e.preventDefault();
-
-        const token = localStorage.getItem('local_auth')
-        const tokenString = JSON.parse(token)
+    const handleFillIn = (e) => {
         const studentId = tokenString.userId;
-
-        (() => {
-            document.getElementById('assign2').style.display = 'none';
-        })()
-
-        const payload = {
-            answer:multiSelect,
-            submitted: true,
-            user_id: studentId,
-            type:'MS'
-        }
-
-        const requestOptions =({
-            method:'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body:JSON.stringify(payload)
-        })
-    
-        fetch('http://localhost:8000/assign/submit', requestOptions)
-        .catch(err => console.log(err))  
+        questionPayload(e, studentId, fillInBlank, 'FIB');
     }
-
-
-    function handleFillIn(e){
-        alert("Assignment was submitted!")
-        e.preventDefault();
-
-        const token = localStorage.getItem('local_auth')
-        const tokenString = JSON.parse(token)
-        const studentId = tokenString.userId;
-
-       (() => {
-         document.getElementById('assign3').style.display = 'none';
-       })()
-
-        const payload={
-            answer:fillInBlank,
-            submitted: true,
-            user_id: studentId,
-            type:'FIB'
-        }
-
-        const requestOptions =({
-            method:'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body:JSON.stringify(payload)
-        })
-    
-
-        fetch('http://localhost:8000/assign/submit', requestOptions)
-        .catch(err => console.log(err)) 
-    }
-
 
 
     //destroys student session from localstorage//
