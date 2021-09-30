@@ -118,24 +118,29 @@ exports.deleteAllUsers = async (req, res) => {
 
 exports.authenticateUsers = async (req, res) => {
     try{
-        const user = await User.findOne({name: req.query.user})
+        const user = await User.findOne({name: req.query.user}).select('+password');
+        const password = req.query.password;
 
+        //Check if user exists
         if(!user){
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'This user does not exist',
             })
-        }else{
-            if(user.password === req.query.password){
-                res.status(200).json({
-                    message: 'user has been autheticated',
-                    user
-                })
-            }else{
-                res.status(404).json({
-                    message: 'Password is incorrect'
-                })
-            } 
         }
+       
+        //Check if password matches
+        if(!(await user.correctPassword(password, user.password))){
+              return res.status(404).json({
+                    message: 'This password is incorrect. Please try again.',
+            })
+        }    
+        
+        //If checks are cleared then login user
+        res.status(200).json({
+            message: 'Success',
+            user
+        })
+        
     }catch(err){
         res.status(500).json({
             message: 'An error occuried while trying to retrieve users'
