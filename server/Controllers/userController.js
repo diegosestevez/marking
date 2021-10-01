@@ -31,7 +31,7 @@ let assignObj = [
     {
         title: "Which of the following services does the LTC provide? Select all that apply.",
         type: 'MS',
-        options: ['Technicall Illustration', 'Instructional Design', 'Financial Advice', 'Admission and Registration', 'Audio-visual Loans'],
+        options: ['Technical Illustration', 'Instructional Design', 'Financial Advice', 'Admission and Registration', 'Audio-visual Loans'],
         submitted: false,
         score: 0,
         answer: ''
@@ -80,7 +80,7 @@ exports.createDefaultUsers = async () =>{
         }
     }catch(err){
         res.status(404).json({
-            message:'assignment were not created',
+            message:'assignments were not created',
             error: err
         })
     } 
